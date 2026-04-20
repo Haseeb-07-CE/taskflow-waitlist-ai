@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Sparkles, ArrowRight, Users, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -27,10 +29,21 @@ function Index() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email) return;
+    if (!name || !email || loading) return;
+    setLoading(true);
+    const { error } = await supabase
+      .from("signups")
+      .insert({ name, email });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message || "Something went wrong. Please try again.");
+      return;
+    }
+    toast.success("You're on the list! We'll be in touch soon.");
     setSubmitted(true);
   };
 
@@ -95,7 +108,7 @@ function Index() {
               </div>
               <h3 className="text-xl font-semibold text-foreground">You're on the list!</h3>
               <p className="text-sm text-foreground/70">
-                We'll email you the moment early access opens.
+                We'll be in touch soon.
               </p>
             </div>
           ) : (
