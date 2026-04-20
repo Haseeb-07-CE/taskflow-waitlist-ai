@@ -1,5 +1,4 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-import { Toaster } from "@/components/ui/sonner";
 
 import appCss from "../styles.css?url";
 
@@ -31,13 +30,17 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { name: "description", content: "TaskFlow AI Waitlist is a signup page for an AI productivity tool." },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:description", content: "TaskFlow AI Waitlist is a signup page for an AI productivity tool." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Lovable App" },
+      { name: "twitter:description", content: "TaskFlow AI Waitlist is a signup page for an AI productivity tool." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/15d62547-dc59-44b7-86de-208447e48cb2/id-preview-3705fc87--be5bb88a-ced5-4376-8ffd-a353bd42eb5a.lovable.app-1776668380782.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/15d62547-dc59-44b7-86de-208447e48cb2/id-preview-3705fc87--be5bb88a-ced5-4376-8ffd-a353bd42eb5a.lovable.app-1776668380782.png" },
     ],
     links: [
       {
@@ -66,10 +69,5 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return (
-    <>
-      <Outlet />
-      <Toaster />
-    </>
-  );
+  return <Outlet />;
 }
