@@ -152,6 +152,15 @@ function Index() {
           </div>
         </div>
       </section>
+
+      <footer className="relative z-10 mx-auto max-w-6xl px-6 pb-8 text-center">
+        <a
+          href="/login"
+          className="text-xs text-foreground/40 transition-colors hover:text-foreground/70"
+        >
+          Admin Login
+        </a>
+      </footer>
     </main>
   );
 }
