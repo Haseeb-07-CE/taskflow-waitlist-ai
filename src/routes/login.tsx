@@ -100,7 +100,10 @@ function LoginPage() {
           </form>
         </div>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 flex flex-col items-center gap-2 text-center">
+          <Link to="/signup" className="text-sm text-foreground/70 hover:text-foreground">
+            Need an admin account? <span className="text-foreground font-medium">Create one</span>
+          </Link>
           <Link to="/" className="text-sm text-foreground/60 hover:text-foreground">
             ← Back to Home
           </Link>
