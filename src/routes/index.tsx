@@ -108,7 +108,7 @@ function Index() {
               </div>
               <h3 className="text-xl font-semibold text-foreground">You're on the list!</h3>
               <p className="text-sm text-foreground/70">
-                We'll email you the moment early access opens.
+                We'll be in touch soon.
               </p>
             </div>
           ) : (
