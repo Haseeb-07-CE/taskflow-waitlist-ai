@@ -55,7 +55,13 @@ function SignupPage() {
       });
       if (signInError) {
         setLoading(false);
-        setSuccess("Account created! Please sign in.");
+        if (signInError.message.toLowerCase().includes("not confirmed")) {
+          setSuccess(
+            "Account created! Please check your inbox to confirm your email, then sign in. To skip this step, disable 'Confirm email' in your Supabase Auth settings."
+          );
+        } else {
+          setSuccess("Account created! Please sign in.");
+        }
         return;
       }
     }

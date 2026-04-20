@@ -35,7 +35,13 @@ function LoginPage() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
-      setError(error.message);
+      if (error.message.toLowerCase().includes("not confirmed")) {
+        setError(
+          "Your email isn't confirmed yet. Check your inbox for the confirmation link, or disable 'Confirm email' in Supabase Auth settings."
+        );
+      } else {
+        setError(error.message);
+      }
       return;
     }
     navigate({ to: "/dashboard" });
