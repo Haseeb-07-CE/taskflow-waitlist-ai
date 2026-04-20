@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/signup")({
 });
 
 function SignupPage() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,20 +33,35 @@ function SignupPage() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { full_name: name },
-        emailRedirectTo: `${window.location.origin}/login`,
+        emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
-    setLoading(false);
-    if (error) {
-      setError(error.message);
+    if (signUpError) {
+      setLoading(false);
+      setError(signUpError.message);
       return;
     }
-    setSuccess("Account created! Check your email to confirm, then sign in.");
+
+    // If signup didn't return a session (email confirmation enabled), try to sign in directly
+    if (!data.session) {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInError) {
+        setLoading(false);
+        setSuccess("Account created! Please sign in.");
+        return;
+      }
+    }
+
+    setLoading(false);
+    navigate({ to: "/dashboard" });
   };
 
   return (
