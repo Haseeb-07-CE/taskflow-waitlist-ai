@@ -47,6 +47,17 @@ function LoginPage() {
     navigate({ to: "/dashboard" });
   };
 
+  const onGoogleSignIn = async () => {
+    setError(null);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin + "/dashboard",
+      },
+    });
+    if (error) setError(error.message);
+  };
+
   return (
     <main
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-12"
