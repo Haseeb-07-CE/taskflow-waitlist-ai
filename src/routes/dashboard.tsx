@@ -152,31 +152,31 @@ function DashboardPage() {
   return (
     <main className="min-h-screen bg-background text-foreground" style={{ background: "var(--gradient-hero)" }}>
       <nav className="border-b border-white/10 bg-white/5 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-center gap-2 min-w-0">
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
               style={{ background: "var(--gradient-brand)" }}
             >
               <Sparkles className="h-4 w-4 text-white" />
             </div>
-            <span className="font-semibold">TaskFlow AI — Admin</span>
+            <span className="truncate text-sm font-semibold sm:text-base">TaskFlow AI — Admin</span>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-foreground/70 sm:inline">{userEmail}</span>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="hidden max-w-[180px] truncate text-sm text-foreground/70 md:inline">{userEmail}</span>
             <Button
               size="sm"
               onClick={onSignOut}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               <LogOut className="h-4 w-4" />
-              Sign Out
+              <span className="hidden sm:inline">Sign Out</span>
             </Button>
           </div>
         </div>
       </nav>
 
-      <section className="mx-auto max-w-6xl px-6 py-8">
+      <section className="mx-auto max-w-6xl animate-in fade-in px-4 py-6 duration-500 sm:px-6 sm:py-8">
         <div className="grid gap-4 sm:grid-cols-3">
           <StatCard
             icon={<Users className="h-5 w-5 text-white" />}
@@ -261,6 +261,7 @@ function DashboardPage() {
           ) : signups.length === 0 ? (
             <div className="px-6 py-16 text-center text-foreground/60">No signups yet.</div>
           ) : (
+            <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-white/10 hover:bg-transparent">
@@ -286,6 +287,7 @@ function DashboardPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </div>
       </section>
