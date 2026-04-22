@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Sparkles, ArrowRight, Users, Check } from "lucide-react";
+import { Sparkles, ArrowRight, Users, Check, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/lib/supabase";
@@ -59,7 +59,7 @@ function Index() {
         style={{ background: "var(--gradient-brand)" }}
       />
 
-      <nav className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+      <nav className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6 sm:py-6">
         <div className="flex items-center gap-2">
           <div
             className="flex h-9 w-9 items-center justify-center rounded-lg"
@@ -67,14 +67,23 @@ function Index() {
           >
             <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <span className="text-lg font-semibold text-foreground">TaskFlow AI</span>
+          <span className="text-base font-semibold text-foreground sm:text-lg">TaskFlow AI</span>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-foreground/80 backdrop-blur">
-          Coming soon
-        </span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-foreground/80 backdrop-blur sm:inline">
+            Coming soon
+          </span>
+          <a
+            href="/login"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-white/20 sm:px-4 sm:py-2 sm:text-sm"
+          >
+            <LogIn className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            Admin
+          </a>
+        </div>
       </nav>
 
-      <section className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 pt-16 pb-24 text-center sm:pt-24">
+      <section className="relative z-10 mx-auto flex max-w-3xl animate-in fade-in flex-col items-center px-4 pt-10 pb-20 text-center duration-700 sm:px-6 sm:pt-24 sm:pb-24">
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-foreground/90 backdrop-blur">
           <span
             className="h-1.5 w-1.5 rounded-full"
@@ -83,7 +92,7 @@ function Index() {
           Early access opening soon
         </div>
 
-        <h1 className="text-balance text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl">
+        <h1 className="text-balance text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:text-6xl">
           Join the Waitlist —{" "}
           <span
             className="bg-clip-text text-transparent"
@@ -93,7 +102,7 @@ function Index() {
           </span>
         </h1>
 
-        <p className="mt-6 max-w-xl text-pretty text-lg text-foreground/70 sm:text-xl">
+        <p className="mt-5 max-w-xl text-pretty text-base text-foreground/70 sm:mt-6 sm:text-xl">
           The AI tool that manages your tasks automatically.
         </p>
 
@@ -153,14 +162,7 @@ function Index() {
         </div>
       </section>
 
-      <footer className="relative z-10 mx-auto max-w-6xl px-6 pb-8 text-center">
-        <a
-          href="/login"
-          className="text-xs text-foreground/40 transition-colors hover:text-foreground/70"
-        >
-          Admin Login
-        </a>
-      </footer>
+      <footer className="relative z-10 mx-auto max-w-6xl px-6 pb-8 text-center" />
     </main>
   );
 }
