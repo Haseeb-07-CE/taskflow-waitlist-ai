@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Sparkles, LogOut, Users, Clock, CalendarDays, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Sparkles, LogOut, Users, Clock, CalendarDays, Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -35,6 +36,30 @@ function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [signups, setSignups] = useState<Signup[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onUploadClick = () => fileInputRef.current?.click();
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const path = `photo_${Date.now()}`;
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+    setUploading(false);
+    if (error) {
+      toast.error(error.message);
+    } else if (data) {
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(data.path);
+      setUploadedUrl(pub.publicUrl);
+      toast.success("File uploaded!");
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   useEffect(() => {
     let active = true;
