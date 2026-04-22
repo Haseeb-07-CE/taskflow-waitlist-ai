@@ -191,6 +191,31 @@ function DashboardPage() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <h2 className="text-lg font-semibold">Via REST API</h2>
+          <p className="text-sm text-foreground/60">Fetched directly from Supabase REST endpoint.</p>
+          <div className="mt-4">
+            {restLoading ? (
+              <div className="flex items-center gap-2 text-foreground/70">
+                <Loader2 className="h-4 w-4 animate-spin" /> Loading...
+              </div>
+            ) : restError ? (
+              <p className="text-sm text-destructive">{restError}</p>
+            ) : restSignups && restSignups.length > 0 ? (
+              <ul className="divide-y divide-white/10 rounded-lg border border-white/10">
+                {restSignups.map((s) => (
+                  <li key={s.id} className="flex items-center justify-between px-4 py-2 text-sm">
+                    <span className="font-medium">{s.name ?? "—"}</span>
+                    <span className="text-foreground/70">{s.email}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-foreground/60">No signups returned.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
           <h2 className="text-lg font-semibold">Upload Image</h2>
           <p className="text-sm text-foreground/60">Upload an image to the avatars storage bucket.</p>
           <div className="mt-4 flex items-center gap-3">
