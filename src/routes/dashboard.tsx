@@ -36,6 +36,9 @@ function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [signups, setSignups] = useState<Signup[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [restSignups, setRestSignups] = useState<Signup[] | null>(null);
+  const [restLoading, setRestLoading] = useState(true);
+  const [restError, setRestError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
