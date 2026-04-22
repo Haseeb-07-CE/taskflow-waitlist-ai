@@ -287,6 +287,7 @@ function DashboardPage() {
                 ))}
               </TableBody>
             </Table>
+            </div>
           )}
         </div>
       </section>
