@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Sparkles, LogOut, Users, Clock, CalendarDays, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Sparkles, LogOut, Users, Clock, CalendarDays, Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -35,6 +36,30 @@ function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [signups, setSignups] = useState<Signup[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onUploadClick = () => fileInputRef.current?.click();
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const path = `photo_${Date.now()}`;
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+    setUploading(false);
+    if (error) {
+      toast.error(error.message);
+    } else if (data) {
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(data.path);
+      setUploadedUrl(pub.publicUrl);
+      toast.success("File uploaded!");
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   useEffect(() => {
     let active = true;
@@ -137,6 +162,34 @@ function DashboardPage() {
             label="Today's Signups"
             value={loadingData ? "…" : String(todayCount)}
           />
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <h2 className="text-lg font-semibold">Upload Image</h2>
+          <p className="text-sm text-foreground/60">Upload an image to the avatars storage bucket.</p>
+          <div className="mt-4 flex items-center gap-3">
+            <Button onClick={onUploadClick} disabled={uploading}>
+              {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+              {uploading ? "Uploading..." : "Upload Image"}
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={onFileChange}
+            />
+          </div>
+          {uploadedUrl && (
+            <div className="mt-4">
+              <p className="mb-2 text-sm text-foreground/70">Preview:</p>
+              <img
+                src={uploadedUrl}
+                alt="Uploaded preview"
+                className="max-h-64 rounded-lg border border-white/10"
+              />
+            </div>
+          )}
         </div>
 
         <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
