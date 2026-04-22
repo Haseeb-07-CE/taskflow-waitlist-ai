@@ -84,6 +84,29 @@ function DashboardPage() {
       if (!active) return;
       if (!error && data) setSignups(data as Signup[]);
       setLoadingData(false);
+
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/signups?select=*`,
+          {
+            headers: {
+              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+          },
+        );
+        const restData = await response.json();
+        if (!active) return;
+        if (!response.ok) {
+          setRestError(restData?.message ?? "Failed to fetch");
+        } else {
+          setRestSignups(restData as Signup[]);
+        }
+      } catch (err) {
+        if (active) setRestError(err instanceof Error ? err.message : "Failed to fetch");
+      } finally {
+        if (active) setRestLoading(false);
+      }
     };
 
     init();
