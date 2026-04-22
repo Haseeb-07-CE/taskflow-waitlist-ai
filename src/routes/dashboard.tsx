@@ -261,6 +261,7 @@ function DashboardPage() {
           ) : signups.length === 0 ? (
             <div className="px-6 py-16 text-center text-foreground/60">No signups yet.</div>
           ) : (
+            <div className="w-full overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="border-white/10 hover:bg-transparent">
