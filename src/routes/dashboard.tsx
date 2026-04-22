@@ -36,6 +36,9 @@ function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [signups, setSignups] = useState<Signup[]>([]);
   const [loadingData, setLoadingData] = useState(true);
+  const [restSignups, setRestSignups] = useState<Signup[] | null>(null);
+  const [restLoading, setRestLoading] = useState(true);
+  const [restError, setRestError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +84,29 @@ function DashboardPage() {
       if (!active) return;
       if (!error && data) setSignups(data as Signup[]);
       setLoadingData(false);
+
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/signups?select=*`,
+          {
+            headers: {
+              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            },
+          },
+        );
+        const restData = await response.json();
+        if (!active) return;
+        if (!response.ok) {
+          setRestError(restData?.message ?? "Failed to fetch");
+        } else {
+          setRestSignups(restData as Signup[]);
+        }
+      } catch (err) {
+        if (active) setRestError(err instanceof Error ? err.message : "Failed to fetch");
+      } finally {
+        if (active) setRestLoading(false);
+      }
     };
 
     init();
@@ -162,6 +188,31 @@ function DashboardPage() {
             label="Today's Signups"
             value={loadingData ? "…" : String(todayCount)}
           />
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <h2 className="text-lg font-semibold">Via REST API</h2>
+          <p className="text-sm text-foreground/60">Fetched directly from Supabase REST endpoint.</p>
+          <div className="mt-4">
+            {restLoading ? (
+              <div className="flex items-center gap-2 text-foreground/70">
+                <Loader2 className="h-4 w-4 animate-spin" /> Loading...
+              </div>
+            ) : restError ? (
+              <p className="text-sm text-destructive">{restError}</p>
+            ) : restSignups && restSignups.length > 0 ? (
+              <ul className="divide-y divide-white/10 rounded-lg border border-white/10">
+                {restSignups.map((s) => (
+                  <li key={s.id} className="flex items-center justify-between px-4 py-2 text-sm">
+                    <span className="font-medium">{s.name ?? "—"}</span>
+                    <span className="text-foreground/70">{s.email}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-foreground/60">No signups returned.</p>
+            )}
+          </div>
         </div>
 
         <div className="mt-8 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
