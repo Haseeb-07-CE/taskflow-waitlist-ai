@@ -49,16 +49,22 @@ function DashboardPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const path = `photo_${Date.now()}`;
     const { data, error } = await supabase.storage
       .from("avatars")
-      .upload(path, file, { upsert: true });
+      .upload(`photo_${Date.now()}`, file, {
+        upsert: true,
+        contentType: file.type,
+      });
     setUploading(false);
     if (error) {
+      console.log("Upload error:", error.message);
+      alert("Upload failed: " + error.message);
       toast.error(error.message);
-    } else if (data) {
+    } else {
+      console.log("Upload success:", data);
       const { data: pub } = supabase.storage.from("avatars").getPublicUrl(data.path);
       setUploadedUrl(pub.publicUrl);
+      alert("File uploaded successfully!");
       toast.success("File uploaded!");
     }
     if (fileInputRef.current) fileInputRef.current.value = "";
